@@ -1,6 +1,6 @@
 # URL Shortener
 
-A simple URL shortener built with FastAPI, Postgres, and Redis.
+A simple URL shortener built with FastAPI, Postgres, and Redis. This was built just for fun, but core concepts could be expanded to a production-ready url shortener. 
 
 Based on the following design (minus the gateway and microservices haha):
 ![Diagram](diagram.JPG)
