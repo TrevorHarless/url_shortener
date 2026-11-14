@@ -7,7 +7,7 @@ Based on the following design (minus the gateway and microservices haha):
 
 
 - **Postgres** stores the short codes and the URLs they point to.
-- **Redis** caches lookups so redirects skip the database when they can (entries expire after 1 day).
+- **Redis** caches lookups so redirects skip the database when they can (entries expire after 1 hour).
 
 ## Running
 
@@ -36,23 +36,27 @@ The API runs at http://localhost:8000, with interactive docs at http://localhost
 Create a short URL:
 
 ```bash
-curl -X POST http://localhost:8000/shorten \
+curl -X POST http://localhost:8000/urls \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://trevorharless.com"}'
+  -d '{"long_url": "https://trevorharless.com", "created_by": "trevor"}'
 ```
 
 ```json
 {
-  "short_code": "aB3xYz",
-  "short_url": "http://localhost:8000/aB3xYz",
-  "original_url": "https://trevorharless.com/"
+  "short_code": "aB3xYz9",
+  "long_url": "https://trevorharless.com/",
+  "short_url": "http://localhost:8000/aB3xYz9",
+  "created_at": "2026-11-14T18:00:00.000000Z",
+  "created_by": "trevor"
 }
 ```
+
+`created_by` is optional.
 
 Follow it (the API sends a redirect to the original URL):
 
 ```bash
-curl -i http://localhost:8000/aB3xYz
+curl -i http://localhost:8000/aB3xYz9
 ```
 
 ## Monitoring
@@ -63,7 +67,7 @@ curl -i http://localhost:8000/aB3xYz
 redis-cli monitor
 ```
 
-Create or open a short URL and you'll see the `GET`/`SET` calls on `url:<code>` keys. A `GET` with no `SET` after it means the URL came from the cache. Press `Ctrl+C` to stop.
+Open a short URL and you'll see a `GET <short_code>`. On a cache miss it's followed by a `SET <short_code> <long_url> EX 3600` after the lookup in Postgres; a `GET` with no `SET` after it means the URL came from the cache. Creating a URL doesn't touch Redis. Press `Ctrl+C` to stop.
 
 ### Postgres
 
