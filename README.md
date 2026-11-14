@@ -2,6 +2,10 @@
 
 A simple URL shortener built with FastAPI, Postgres, and Redis.
 
+Based on the following design (minus the gateway and microservices haha):
+![Diagram](diagram.JPG)
+
+
 - **Postgres** stores the short codes and the URLs they point to.
 - **Redis** caches lookups so redirects skip the database when they can (entries expire after 1 day).
 
@@ -34,14 +38,14 @@ Create a short URL:
 ```bash
 curl -X POST http://localhost:8000/shorten \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com"}'
+  -d '{"url": "https://trevorharless.com"}'
 ```
 
 ```json
 {
   "short_code": "aB3xYz",
   "short_url": "http://localhost:8000/aB3xYz",
-  "original_url": "https://example.com/"
+  "original_url": "https://trevorharless.com/"
 }
 ```
 
@@ -54,8 +58,6 @@ curl -i http://localhost:8000/aB3xYz
 ## Monitoring
 
 ### Redis
-
-Stream every command Redis receives in real time:
 
 ```bash
 redis-cli monitor
@@ -74,17 +76,8 @@ docker compose exec postgres psql -U postgres -d shortener
 Then run:
 
 ```sql
-\dt                                -- list tables
-SELECT * FROM short_urls;          -- view all short URLs
-SELECT count(*) FROM short_urls;   -- count short URLs
+\dt                               
+SELECT * FROM short_urls;         
 ```
 
-Type `\q` to exit.
-
-## Stopping
-
-```bash
-docker compose down
-```
-
-The Postgres container has no volume, so the data is lost when it's removed.
+Note: The Postgres container has no volume, so the data is lost when it's removed.
