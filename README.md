@@ -25,11 +25,11 @@ uv run uvicorn main:app --reload
 
 The API runs at http://localhost:8000, with interactive docs at http://localhost:8000/docs.
 
-| Service  | Host port | Notes                                                  |
-| -------- | --------- | ------------------------------------------------------ |
-| API      | 8000      |                                                        |
-| Postgres | 5433      | Maps to 5432 in the container (avoids a local Postgres) |
-| Redis    | 6379      |                                                        |
+| Service  | Host port |
+| -------- | --------- | 
+| API      | 8000      |
+| Postgres | 5433      |
+| Redis    | 6379      |
 
 ## Usage
 
