@@ -23,8 +23,6 @@ Then start the API:
 uv run uvicorn main:app --reload
 ```
 
-The API runs at http://localhost:8000, with interactive docs at http://localhost:8000/docs.
-
 | Service  | Host port |
 | -------- | --------- | 
 | API      | 8000      |
@@ -53,7 +51,7 @@ curl -X POST http://localhost:8000/urls \
 
 `created_by` is optional.
 
-Follow it (the API sends a redirect to the original URL):
+GET: redirects to long URL
 
 ```bash
 curl -i http://localhost:8000/aB3xYz9
@@ -67,7 +65,7 @@ curl -i http://localhost:8000/aB3xYz9
 redis-cli monitor
 ```
 
-Open a short URL and you'll see a `GET <short_code>`. On a cache miss it's followed by a `SET <short_code> <long_url> EX 3600` after the lookup in Postgres; a `GET` with no `SET` after it means the URL came from the cache. Creating a URL doesn't touch Redis. Press `Ctrl+C` to stop.
+Open a short URL and you'll see a `GET <short_code>`. On a cache miss it's followed by a `SET <short_code> <long_url> EX 3600` after the lookup in Postgres; a `GET` with no `SET` after it means the URL came from the cache. Creating a URL doesn't touch Redis.
 
 ### Postgres
 
@@ -83,5 +81,3 @@ Then run:
 \dt                               
 SELECT * FROM short_urls;         
 ```
-
-Note: The Postgres container has no volume, so the data is lost when it's removed.
